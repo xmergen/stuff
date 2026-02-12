@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Valentipu 💘</title>
+  <style>
+    :root {
+      --bg: #faf7f7;
+      --text: #333;
+      --yes: #22c55e;
+      --no: #e5e7eb;
+      --shadow: 0 12px 30px rgba(0,0,0,0.10);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+    }
+
+    .card {
+      width: min(420px, 92vw);
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(0,0,0,0.06);
+      border-radius: 18px;
+      padding: 18px 18px 22px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .hero {
+      width: 260px;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+      margin: 8px auto 14px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+    }
+
+    h1 {
+      margin: 6px 0 16px;
+      font-size: 18px;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      transition: transform 220ms ease, width 220ms ease, height 220ms ease, font-size 220ms ease, opacity 220ms ease;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    #yesBtn {
+      background: var(--yes);
+      color: white;
+      min-width: 120px;
+      font-weight: 600;
+      transform: scale(1);
+      position: relative;
+      z-index: 2;
+    }
+
+    #noBtn {
+      background: var(--no);
+      color: #111827;
+      min-width: 120px;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .msg {
+      margin-top: 14px;
+      font-size: 15px;
+      opacity: 0.85;
+      min-height: 22px;
+    }
+
+    /* When YES goes full-screen */
+    .fullscreen-yes {
+      position: fixed !important;
+      top: 0; left: 0;
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0 !important;
+      font-size: clamp(28px, 6vw, 64px) !important;
+      display: grid;
+      place-items: center;
+      box-shadow: none !important;
+      transform: none !important;
+      z-index: 9999 !important;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: scale(0.9) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card" id="card">
+    <!-- Put your image/gif link here -->
+    <img
+      class="hero"
+      src="https://media.tenor.com/1TqGQK7JXU8AAAAC/minion-love.gif"
+      alt="cute"
+    />
+
+    <h1>Will you be my valentipu?</h1>
+
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const msg    = document.getElementById("msg");
+    const card   = document.getElementById("card");
+
+    // Your exact “No button text” progression:
+    const noTexts = [
+      "No",
+      "Are you sure?",
+      "Are you sure you're sure?",
+      "You better say yes",
+      "Pipu, pleaaaseee",
+      "No is not an option!"
+    ];
+
+    let step = 0;             // which "No text" we are on
+    let yesScale = 1;         // how big YES is
+    const growFactor = 1.28;  // how fast YES grows each click
+
+    function updateNoText() {
+      noBtn.textContent = noTexts[Math.min(step, noTexts.length - 1)];
+    }
+
+    function growYes() {
+      yesScale *= growFactor;
+      yesBtn.style.transform = `scale(${yesScale})`;
+    }
+
+    function goFullscreenYes() {
+      // Make YES cover the whole page
+      yesBtn.classList.add("fullscreen-yes");
+      yesBtn.textContent = "YES 💘";
+      // Fade out everything else
+      card.classList.add("fade-out");
+      msg.textContent = "";
+    }
+
+    noBtn.addEventListener("click", () => {
+      step += 1;
+      growYes();
+
+      // Update No button text to the next phrase (or keep last)
+      updateNoText();
+
+      // Once we’ve used all phrases, go full screen
+      if (step >= noTexts.length) {
+        goFullscreenYes();
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+      // If it’s full screen already, still show the success message
+      msg.textContent = "YAY!! 💖 I knew it. Happy Valentipu day 🫶";
+      // Optional little visual punch:
+      yesBtn.textContent = "YESS!! 💘";
+      noBtn.classList.add("fade-out");
+    });
+
+    // Initialize
+    updateNoText();
+  </script>
+</body>
+</html>

@@ -84,8 +84,8 @@
     }
 
     #noBtn {
-      background: var(--no);
-      color: #111827;
+      background: #ef4444;
+      color: white;
       min-width: 120px;
       font-weight: 500;
       position: relative;
@@ -119,17 +119,74 @@
       pointer-events: none !important;
       transform: scale(0.9) !important;
     }
+    #modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0,0,0,0.35);
+  z-index: 10000;
+  transition: opacity 200ms ease;
+}
+
+#modal.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-card {
+  width: min(420px, 92vw);
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.modal-gif {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin: 0 auto 12px;
+  display: block;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.modal-gif.fade-out {
+  display: none;
+}
+
+.modal-text {
+  font-size: 16px;
+  line-height: 1.35;
+  white-space: pre-line;
+  margin-bottom: 14px;
+}
+
+.modal-close {
+  border: none;
+  background: #111827;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
   </style>
 </head>
+
+<div id="modal" class="fade-out" aria-hidden="true">
+  <div class="modal-card">
+    <img id="modalGif" class="modal-gif fade-out" alt="gif"/>
+    <div id="modalText" class="modal-text"></div>
+    <button id="closeModal" class="modal-close">OK</button>
+  </div>
+</div>
 
 <body>
   <div class="card" id="card">
     <!-- Put your image/gif link here -->
-    <img
-      class="hero"
-      src="https://media.tenor.com/1TqGQK7JXU8AAAAC/minion-love.gif"
-      alt="cute"
-    />
+    <img id="heroImg" class="hero" src="./couple.jpg" alt="us" />
 
     <h1>Will you be my valentipu?</h1>
 
@@ -142,10 +199,44 @@
   </div>
 
   <script>
+    let yesClicks = 0;
+
+const modal = document.getElementById("modal");
+const modalText = document.getElementById("modalText");
+const modalGif = document.getElementById("modalGif");
+const closeModal = document.getElementById("closeModal");
+
+function showModal(text, gifUrl = "") {
+  modalText.textContent = text;
+
+  if (gifUrl) {
+    modalGif.src = gifUrl;
+    modalGif.classList.remove("fade-out");
+  } else {
+    modalGif.classList.add("fade-out");
+    modalGif.removeAttribute("src");
+  }
+
+  modal.classList.remove("fade-out");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function hideModal() {
+  modal.classList.add("fade-out");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+closeModal.addEventListener("click", hideModal);
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) hideModal();
+});
     const yesBtn = document.getElementById("yesBtn");
     const noBtn  = document.getElementById("noBtn");
     const msg    = document.getElementById("msg");
     const card   = document.getElementById("card");
+    const heroImg = document.getElementById("heroImg");
+    const minionGif = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif";
+    const fireworksGif = "https://media1.tenor.com/m/1Ze3AoBHyW0AAAAd/fireworks-exploding-heart.gif";
 
     // Your exact “No button text” progression:
     const noTexts = [
@@ -180,6 +271,9 @@
     }
 
     noBtn.addEventListener("click", () => {
+      if (step === 0) {
+        heroImg.src = minionGif;   // first time she presses No
+      }
       step += 1;
       growYes();
 
@@ -193,12 +287,24 @@
     });
 
     yesBtn.addEventListener("click", () => {
-      // If it’s full screen already, still show the success message
-      msg.textContent = "YAY!! 💖 I knew it. Happy Valentipu day 🫶";
-      // Optional little visual punch:
-      yesBtn.textContent = "YESS!! 💘";
-      noBtn.classList.add("fade-out");
-    });
+  // First YES ever, before any NO presses:
+  if (yesClicks === 0 && step === 0) {
+    yesClicks++;
+    showModal(
+      "Did you just say yes so quickly? 🥰\nJust because I worked hard for this webpage, could you go back and press \"No\" for fun?"
+    );
+    return; // don't end the game yet
+  }
+
+  // Otherwise (second attempt or after NO clicks):
+  yesClicks++;
+  showModal("YAYYYY!!!", fireworksGif);
+
+  // keep your existing 'win' behavior too:
+  msg.textContent = "YAY!! 💖 I knew it. Happy Valentipu day 🫶";
+  yesBtn.textContent = "YESS!! 💘";
+  noBtn.classList.add("fade-out");
+});
 
     // Initialize
     updateNoText();

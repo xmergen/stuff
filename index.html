@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Valentipu 💘</title>
-  <style>
+<style>
   :root {
     --bg: #fbf7f7;
     --text: #2b2b2b;
@@ -118,7 +118,6 @@
     border-radius: 16px !important;
   }
 </style>
-
 </head>
 
 <div id="modal" class="fade-out" aria-hidden="true">
@@ -143,98 +142,114 @@
   <div class="msg" id="msg"></div>
 </div>
 
-    <div class="msg" id="msg"></div>
-  </div>
-
   <script>
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn  = document.getElementById("noBtn");
-  const heroImg = document.getElementById("heroImg");
+    let yesClicks = 0;
 
-  const noTexts = [
-    "No",
-    "Are you sure?",
-    "Are you sure you're sure?",
-    "You better say yes",
-    "Pipu, pleaaaseee",
-    "No is not an option!",
-    "Still no??",
-    "Last chance 😤",
-    "Okay… wow 😭"
-  ];
+const modal = document.getElementById("modal");
+const modalText = document.getElementById("modalText");
+const modalGif = document.getElementById("modalGif");
+const closeModal = document.getElementById("closeModal");
 
-  // Put your DIRECT Tenor gif URL here (media.tenor.com/.../tenor.gif)
-  const fireworksGifDirect = "https://media1.tenor.com/m/1Ze3AoBHyW0AAAAd/fireworks-exploding-heart.gif";
-  const minionGifDirect = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif";
+function showModal(text, gifUrl = "") {
+  modalText.textContent = text;
 
-  let step = 0;           // how many times NO was pressed
-  let yesScale = 1;
-
-  // how far the "No" button slides each time (in px)
-  // alternating left/right so it stays visible
-  function slideNo() {
-    const direction = (step % 2 === 0) ? 1 : -1; // right, left, right, left...
-    const distance = Math.min(28 + step * 10, 160); // cap so it doesn't fly away
-    noBtn.style.transform = `translateX(${direction * distance}px)`;
+  if (gifUrl) {
+    modalGif.src = gifUrl;
+    modalGif.classList.remove("fade-out");
+  } else {
+    modalGif.classList.add("fade-out");
+    modalGif.removeAttribute("src");
   }
 
-  function growYes() {
-    // grows faster later so we reach iPhone-width in fewer taps
-    const factor = (step < 3) ? 1.22 : (step < 6) ? 1.28 : 1.35;
-    yesScale *= factor;
-    yesBtn.style.transform = `scale(${yesScale})`;
-  }
+  modal.classList.remove("fade-out");
+  modal.setAttribute("aria-hidden", "false");
+}
 
-  function updateNoText() {
-    noBtn.textContent = noTexts[Math.min(step, noTexts.length - 1)];
-  }
+function hideModal() {
+  modal.classList.add("fade-out");
+  modal.setAttribute("aria-hidden", "true");
+}
 
-  function makeYesIphoneWide() {
-    // edge-to-edge vibe like your screenshot
-    yesBtn.classList.add("yes-viewport");
-    yesBtn.textContent = "Yes";
-    // keep No readable, move it off to the side a bit
-    noBtn.style.transform = "translateX(160px)";
-  }
+closeModal.addEventListener("click", hideModal);
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) hideModal();
+});
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const msg    = document.getElementById("msg");
+    const card   = document.getElementById("card");
+    const heroImg = document.getElementById("heroImg");
+    const minionGif = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif";
+    const fireworksGif = "https://media1.tenor.com/m/1Ze3AoBHyW0AAAAd/fireworks-exploding-heart.gif";
 
-  noBtn.addEventListener("click", () => {
-    // first NO: swap photo -> minion gif
-    if (step === 0 && minionGifDirect && !minionGifDirect.includes("PASTE_")) {
-      heroImg.src = minionGifDirect;
+    // Your exact “No button text” progression:
+    const noTexts = [
+      "No",
+      "Are you sure?",
+      "Are you sure you're sure?",
+      "----Better say yes",
+      "----------Pleaseee",
+      "---------------WHY",
+      "------------------OMG?!"
+    ];
+
+    let step = 0;             // which "No text" we are on
+    let yesScale = 1;         // how big YES is
+    const growFactor = 1.28;  // how fast YES grows each click
+
+    function updateNoText() {
+      noBtn.textContent = noTexts[Math.min(step, noTexts.length - 1)];
     }
 
-    step += 1;
-    updateNoText();
-    growYes();
-    slideNo();
-
-    // after enough taps, force the iPhone-width look
-    // tweak this number depending on how fast you want it:
-    if (step >= 6) {
-      makeYesIphoneWide();
+    function growYes() {
+      yesScale *= growFactor;
+      yesBtn.style.transform = `scale(${yesScale})`;
     }
-  });
 
-  yesBtn.addEventListener("click", () => {
-    // keep your existing popup logic if you already added it earlier
-    // (If you still have showModal from previous steps, use it)
-    if (typeof showModal === "function") {
-      // First YES (before any NO presses):
+    function goFullscreenYes() {
+      // Make YES cover the whole page
+      yesBtn.classList.add("fullscreen-yes");
+      yesBtn.textContent = "YES 💘";
+      // Fade out everything else
+      card.classList.add("fade-out");
+      msg.textContent = "";
+    }
+
+    noBtn.addEventListener("click", () => {
       if (step === 0) {
-        showModal(
-          "Did you just say yes so quickly? 🥰\nJust because I worked hard for this webpage, could you go back and press \"No\" for fun?"
-        );
-        return;
+        heroImg.src = minionGif;   // first time she presses No
       }
+      step += 1;
+      growYes();
 
-      // Later YES:
-      const fireworksGifDirect = window.fireworksGifDirect || "";
-      showModal("YAYYYY!!!", fireworksGifDirect);
-    }
-  });
+      // Update No button text to the next phrase (or keep last)
+      updateNoText();
 
-  // init
-  updateNoText();
+      // Once we’ve used all phrases, go full screen
+      if (step >= noTexts.length) {
+        goFullscreenYes();
+      }
+    });
+
+    yesBtn.addEventListener("click", () => {
+  // First YES ever, before any NO presses:
+  if (yesClicks === 0 && step === 0) {
+    yesClicks++;
+    showModal(
+      "Did you just say yes so quickly? 🥰\nJust because I worked hard for this webpage, could you go back and press \"No\" for fun?"
+    );
+    return; // don't end the game yet
+  }
+
+  // Otherwise (second attempt or after NO clicks):
+  yesClicks++;
+  showModal("YAYYYY!!!💘", fireworksGif);
+
+  noBtn.classList.add("fade-out");
+});
+
+    // Initialize
+    updateNoText();
   </script>
 </body>
 </html>

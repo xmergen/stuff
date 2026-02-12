@@ -5,174 +5,120 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Valentipu 💘</title>
   <style>
-    :root {
-      --bg: #faf7f7;
-      --text: #333;
-      --yes: #22c55e;
-      --no: #e5e7eb;
-      --shadow: 0 12px 30px rgba(0,0,0,0.10);
-    }
+  :root {
+    --bg: #fbf7f7;
+    --text: #2b2b2b;
+    --yes: #22c55e;
+    --no: #ef4444;
+  }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-    }
+  * { box-sizing: border-box; }
 
-    .card {
-      width: min(420px, 92vw);
-      background: rgba(255,255,255,0.7);
-      border: 1px solid rgba(0,0,0,0.06);
-      border-radius: 18px;
-      padding: 18px 18px 22px;
-      box-shadow: var(--shadow);
-      text-align: center;
-      backdrop-filter: blur(6px);
-    }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+  }
 
-    .hero {
-      width: 260px;
-      height: 260px;
-      object-fit: cover;
-      border-radius: 10px;
-      display: block;
-      margin: 8px auto 14px;
-      border: 1px solid rgba(0,0,0,0.08);
-      background: #fff;
-    }
+  .wrap {
+    width: min(420px, 92vw);
+    text-align: center;
+    padding: 18px 12px;
+  }
 
-    h1 {
-      margin: 6px 0 16px;
-      font-size: 18px;
-      font-weight: 500;
-      opacity: 0.9;
-    }
+  .hero {
+    width: min(280px, 70vw);
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin: 8px auto 14px;
+    border: 1px solid rgba(0,0,0,0.08);
+    background: #fff;
+  }
 
-    .buttons {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      align-items: center;
-      margin-top: 6px;
-    }
+  h1 {
+    margin: 10px 0 16px;
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.9;
+  }
 
-    button {
-      border: none;
-      cursor: pointer;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 16px;
-      transition: transform 220ms ease, width 220ms ease, height 220ms ease, font-size 220ms ease, opacity 220ms ease;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
+  .buttons {
+    position: relative;
+    height: 64px;                 /* stable vertical space */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 8px;
+  }
 
-    #yesBtn {
-      background: var(--yes);
-      color: white;
-      min-width: 120px;
-      font-weight: 600;
-      transform: scale(1);
-      position: relative;
-      z-index: 2;
-    }
+  button {
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 16px;
+    transition:
+      transform 220ms ease,
+      width 220ms ease,
+      font-size 220ms ease,
+      left 220ms ease,
+      right 220ms ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+  }
 
-    #noBtn {
-      background: #ef4444;
-      color: white;
-      min-width: 120px;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
-    }
+  #yesBtn {
+    background: var(--yes);
+    color: white;
+    font-weight: 700;
+    width: 140px;               /* base width */
+    transform-origin: center;
+  }
 
-    .msg {
-      margin-top: 14px;
-      font-size: 15px;
-      opacity: 0.85;
-      min-height: 22px;
-    }
+  #noBtn {
+    background: var(--no);
+    color: white;
+    font-weight: 600;
+    width: 160px;               /* slightly wider for longer text */
+  }
 
-    /* When YES goes full-screen */
-    .fullscreen-yes {
-      position: fixed !important;
-      top: 0; left: 0;
-      width: 100vw !important;
-      height: 100vh !important;
-      border-radius: 0 !important;
-      font-size: clamp(28px, 6vw, 64px) !important;
-      display: grid;
-      place-items: center;
-      box-shadow: none !important;
-      transform: none !important;
-      z-index: 9999 !important;
-    }
+  .msg {
+    margin-top: 14px;
+    font-size: 15px;
+    opacity: 0.85;
+    min-height: 22px;
+  }
 
-    .fade-out {
-      opacity: 0 !important;
-      pointer-events: none !important;
-      transform: scale(0.9) !important;
-    }
-    #modal {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: rgba(0,0,0,0.35);
-  z-index: 10000;
-  transition: opacity 200ms ease;
-}
+  /* When YES becomes iPhone-width */
+  .yes-wide {
+    width: min(92vw, 420px) !important; /* edge-to-edge inside wrap width */
+    font-size: 44px !important;
+    padding: 22px 18px !important;
+    border-radius: 14px !important;
+  }
 
-#modal.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
+  /* Optional: if you want TRUE iPhone edge-to-edge (full viewport width) */
+  .yes-viewport {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%) !important;
+    width: 94vw !important;           /* near full iPhone screen width */
+    bottom: 14vh;                      /* looks like screenshot */
+    z-index: 9999;
+    font-size: 52px !important;
+    padding: 26px 18px !important;
+    border-radius: 16px !important;
+  }
+</style>
 
-.modal-card {
-  width: min(420px, 92vw);
-  background: white;
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.25);
-  text-align: center;
-}
-
-.modal-gif {
-  width: 220px;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin: 0 auto 12px;
-  display: block;
-  border: 1px solid rgba(0,0,0,0.08);
-}
-
-.modal-gif.fade-out {
-  display: none;
-}
-
-.modal-text {
-  font-size: 16px;
-  line-height: 1.35;
-  white-space: pre-line;
-  margin-bottom: 14px;
-}
-
-.modal-close {
-  border: none;
-  background: #111827;
-  color: white;
-  padding: 10px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-  </style>
 </head>
 
 <div id="modal" class="fade-out" aria-hidden="true">
@@ -184,128 +130,111 @@
 </div>
 
 <body>
-  <div class="card" id="card">
-    <!-- Put your image/gif link here -->
-    <img id="heroImg" class="hero" src="./couple.jpg" alt="us" />
+<div class="wrap">
+  <img id="heroImg" class="hero" src="./couple.jpg" alt="us" />
 
-    <h1>Will you be my valentipu?</h1>
+  <h1>Will you be my valentipu?</h1>
 
-    <div class="buttons">
-      <button id="yesBtn">Yes</button>
-      <button id="noBtn">No</button>
-    </div>
+  <div class="buttons" id="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div class="msg" id="msg"></div>
+</div>
 
     <div class="msg" id="msg"></div>
   </div>
 
   <script>
-    let yesClicks = 0;
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn  = document.getElementById("noBtn");
+  const heroImg = document.getElementById("heroImg");
 
-const modal = document.getElementById("modal");
-const modalText = document.getElementById("modalText");
-const modalGif = document.getElementById("modalGif");
-const closeModal = document.getElementById("closeModal");
+  const noTexts = [
+    "No",
+    "Are you sure?",
+    "Are you sure you're sure?",
+    "You better say yes",
+    "Pipu, pleaaaseee",
+    "No is not an option!",
+    "Still no??",
+    "Last chance 😤",
+    "Okay… wow 😭"
+  ];
 
-function showModal(text, gifUrl = "") {
-  modalText.textContent = text;
+  // Put your DIRECT Tenor gif URL here (media.tenor.com/.../tenor.gif)
+  const fireworksGifDirect = "https://media1.tenor.com/m/1Ze3AoBHyW0AAAAd/fireworks-exploding-heart.gif";
+  const minionGifDirect = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif";
 
-  if (gifUrl) {
-    modalGif.src = gifUrl;
-    modalGif.classList.remove("fade-out");
-  } else {
-    modalGif.classList.add("fade-out");
-    modalGif.removeAttribute("src");
+  let step = 0;           // how many times NO was pressed
+  let yesScale = 1;
+
+  // how far the "No" button slides each time (in px)
+  // alternating left/right so it stays visible
+  function slideNo() {
+    const direction = (step % 2 === 0) ? 1 : -1; // right, left, right, left...
+    const distance = Math.min(28 + step * 10, 160); // cap so it doesn't fly away
+    noBtn.style.transform = `translateX(${direction * distance}px)`;
   }
 
-  modal.classList.remove("fade-out");
-  modal.setAttribute("aria-hidden", "false");
-}
-
-function hideModal() {
-  modal.classList.add("fade-out");
-  modal.setAttribute("aria-hidden", "true");
-}
-
-closeModal.addEventListener("click", hideModal);
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) hideModal();
-});
-    const yesBtn = document.getElementById("yesBtn");
-    const noBtn  = document.getElementById("noBtn");
-    const msg    = document.getElementById("msg");
-    const card   = document.getElementById("card");
-    const heroImg = document.getElementById("heroImg");
-    const minionGif = "https://media1.tenor.com/m/kutFNFXxSIsAAAAd/minion-minion-loves.gif";
-    const fireworksGif = "https://media1.tenor.com/m/1Ze3AoBHyW0AAAAd/fireworks-exploding-heart.gif";
-
-    // Your exact “No button text” progression:
-    const noTexts = [
-      "No",
-      "Are you sure?",
-      "Are you sure you're sure?",
-      "----Better say yes",
-      "----------Pleaseee",
-      "---------------WHY",
-      "------------------OMG?!"
-    ];
-
-    let step = 0;             // which "No text" we are on
-    let yesScale = 1;         // how big YES is
-    const growFactor = 1.28;  // how fast YES grows each click
-
-    function updateNoText() {
-      noBtn.textContent = noTexts[Math.min(step, noTexts.length - 1)];
-    }
-
-    function growYes() {
-      yesScale *= growFactor;
-      yesBtn.style.transform = `scale(${yesScale})`;
-    }
-
-    function goFullscreenYes() {
-      // Make YES cover the whole page
-      yesBtn.classList.add("fullscreen-yes");
-      yesBtn.textContent = "YES 💘";
-      // Fade out everything else
-      card.classList.add("fade-out");
-      msg.textContent = "";
-    }
-
-    noBtn.addEventListener("click", () => {
-      if (step === 0) {
-        heroImg.src = minionGif;   // first time she presses No
-      }
-      step += 1;
-      growYes();
-
-      // Update No button text to the next phrase (or keep last)
-      updateNoText();
-
-      // Once we’ve used all phrases, go full screen
-      if (step >= noTexts.length) {
-        goFullscreenYes();
-      }
-    });
-
-    yesBtn.addEventListener("click", () => {
-  // First YES ever, before any NO presses:
-  if (yesClicks === 0 && step === 0) {
-    yesClicks++;
-    showModal(
-      "Did you just say yes so quickly? 🥰\nJust because I worked hard for this webpage, could you go back and press \"No\" for fun?"
-    );
-    return; // don't end the game yet
+  function growYes() {
+    // grows faster later so we reach iPhone-width in fewer taps
+    const factor = (step < 3) ? 1.22 : (step < 6) ? 1.28 : 1.35;
+    yesScale *= factor;
+    yesBtn.style.transform = `scale(${yesScale})`;
   }
 
-  // Otherwise (second attempt or after NO clicks):
-  yesClicks++;
-  showModal("YAYYYY!!!💘", fireworksGif);
+  function updateNoText() {
+    noBtn.textContent = noTexts[Math.min(step, noTexts.length - 1)];
+  }
 
-  noBtn.classList.add("fade-out");
-});
+  function makeYesIphoneWide() {
+    // edge-to-edge vibe like your screenshot
+    yesBtn.classList.add("yes-viewport");
+    yesBtn.textContent = "Yes";
+    // keep No readable, move it off to the side a bit
+    noBtn.style.transform = "translateX(160px)";
+  }
 
-    // Initialize
+  noBtn.addEventListener("click", () => {
+    // first NO: swap photo -> minion gif
+    if (step === 0 && minionGifDirect && !minionGifDirect.includes("PASTE_")) {
+      heroImg.src = minionGifDirect;
+    }
+
+    step += 1;
     updateNoText();
+    growYes();
+    slideNo();
+
+    // after enough taps, force the iPhone-width look
+    // tweak this number depending on how fast you want it:
+    if (step >= 6) {
+      makeYesIphoneWide();
+    }
+  });
+
+  yesBtn.addEventListener("click", () => {
+    // keep your existing popup logic if you already added it earlier
+    // (If you still have showModal from previous steps, use it)
+    if (typeof showModal === "function") {
+      // First YES (before any NO presses):
+      if (step === 0) {
+        showModal(
+          "Did you just say yes so quickly? 🥰\nJust because I worked hard for this webpage, could you go back and press \"No\" for fun?"
+        );
+        return;
+      }
+
+      // Later YES:
+      const fireworksGifDirect = window.fireworksGifDirect || "";
+      showModal("YAYYYY!!!", fireworksGifDirect);
+    }
+  });
+
+  // init
+  updateNoText();
   </script>
 </body>
 </html>
